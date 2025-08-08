@@ -1,1 +1,85 @@
+version: '3.8'
 
+services:
+  # 데이터베이스
+  database:
+    image: postgres:15
+    container_name: gamer_db
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}  
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - gamer_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # 백엔드 API 서버
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: gamer_api
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://${DB_USER}:${DB_PASSWORD}@database:5432/${DB_NAME}
+      - ML_MODEL_URL=http://ml-models:8001
+    depends_on:
+      database:
+        condition: service_healthy
+      ml-models:
+        condition: service_started
+    networks:
+      - gamer_network
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
+
+  # ML 모델 서버
+  ml-models:
+    build:
+      context: ./ml-models
+      dockerfile: Dockerfile
+    container_name: gamer_ml
+    ports:
+      - "8001:8001"
+    environment:
+      - MODEL_CACHE_DIR=/app/models
+    networks:
+      - gamer_network
+    volumes:
+      - model_cache:/app/models
+    restart: unless-stopped
+
+  # 프론트엔드
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: gamer_frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://localhost:8000
+    depends_on:
+      - backend
+    networks:
+      - gamer_network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  model_cache:
+
+networks:
+  gamer_network:
+    driver: bridge
