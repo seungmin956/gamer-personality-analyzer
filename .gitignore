@@ -1,0 +1,14 @@
+# 환경변수
+.env
+.env.local
+.env.production
+.env.staging
+
+# Docker
+docker-compose.override.yml
+
+# 기타 민감한 파일들
+*.log
+.DS_Store
+node_modules/
+__pycache__/
