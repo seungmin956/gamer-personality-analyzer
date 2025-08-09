@@ -58,6 +58,7 @@ services:
       - gamer_network
     volumes:
       - model_cache:/app/models
+      - ./data:/app/data  # 🔥 이 줄 추가!
     restart: unless-stopped
 
   # 프론트엔드
