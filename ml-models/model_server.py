@@ -1,10 +1,10 @@
+# ml-models/model_server.py 
+from fastapi import FastAPI
+from transformers import pipeline
 
-from transformers import pipeline, AutoTokenizer, AutoModel
-import json
+app = FastAPI()
 
-# 여러 모델 성능 비교
-models_to_test = [
-    "klue/roberta-base",
-    "beomi/KcELECTRA-base", 
-    "sentence-transformers/xlm-r-base"
-]
+@app.post("/analyze_personality")
+async def analyze_personality(interview_text: str):
+    # 면접 텍스트 → 성향 분류
+    return {"personality": "적극형", "confidence": 0.85}
