@@ -53,7 +53,7 @@ class InterviewResponse(BaseModel):
 class ModelTrainer:
     """모델 학습 클래스"""
     
-    def __init__(self, data_path="/data/gamer_profiles.json"):
+    def __init__(self, data_path="/data/profiles.json"):
         self.data_path = data_path
         self.vectorizer = None
         self.model = None
