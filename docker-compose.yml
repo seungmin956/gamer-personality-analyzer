@@ -14,8 +14,6 @@ services:
       - DATABASE_URL=postgresql://${DB_USER}:${DB_PASSWORD}@database:5432/${DB_NAME}
       - ML_MODEL_URL=http://ml-models:8001
     depends_on:
-      database:
-        condition: service_healthy
       ml-models:
         condition: service_started
     networks:
