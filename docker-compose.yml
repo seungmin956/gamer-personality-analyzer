@@ -80,3 +80,11 @@ services:
     networks:
       - gamer_network
     restart: unless-stopped
+
+volumes:
+  postgres_data:
+  model_cache:
+
+networks:
+  gamer_network:
+    driver: bridge
