@@ -443,40 +443,6 @@ function App() {
         </>
       )}
 
-      {/* 시스템 상태 표시 */}
-      <div style={{ 
-        backgroundColor: '#F8F9FA', 
-        padding: '15px', 
-        borderRadius: '10px',
-        border: '1px solid #E9ECEF',
-        marginTop: '20px'
-      }}>
-        <h3 style={{ color: '#2C3E50', marginBottom: '15px' }}>📡 시스템 상태</h3>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '10px' }}>
-          {Object.entries(serviceStatus).map(([service, status]) => (
-            <div key={service} style={{
-              display: 'flex',
-              alignItems: 'center',
-              padding: '8px',
-              backgroundColor: 'white',
-              borderRadius: '5px',
-              border: '1px solid #E9ECEF'
-            }}>
-              <span style={{ marginRight: '8px' }}>{getStatusIcon(status)}</span>
-              <div>
-                <div style={{ fontSize: '12px', color: '#6C757D' }}>
-                  {service === 'mlModel' ? 'ML 모델' : 
-                   service === 'backend' ? '백엔드' :
-                   service === 'database' ? '데이터' : '프론트엔드'}
-                </div>
-                <div style={{ fontSize: '14px', fontWeight: 'bold', color: '#2C3E50' }}>
-                  {getStatusText(status)}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
 
       {/* 기술 스택 정보 */}
       <div style={{ 
