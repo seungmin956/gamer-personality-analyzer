@@ -110,7 +110,17 @@ function App() {
     if (isTop) {
       return '#E74C3C'; // 빨간색 (최고 성향)
     }
-    return '#95A5A6'; // 회색 (나머지 성향)
+    
+    // 직무 중심 성향별 기본 색상 (회색 계열)
+    const colors = {
+      '리더십형': '#7F8C8D',
+      '전문가형': '#95A5A6', 
+      '소통형': '#85929E',
+      '실행형': '#99A3A4',
+      '창의형': '#A6ACAF',
+      '안정형': '#B2BABB'
+    };
+    return colors[personality] || '#95A5A6';
   };
 
   // 레이더 차트용 SVG 컴포넌트
