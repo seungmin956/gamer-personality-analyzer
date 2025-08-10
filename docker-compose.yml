@@ -4,7 +4,7 @@ services:
   # 데이터베이스
   database:
     image: postgres:15
-    container_name: gamer_db
+    container_name: personality_db        
     environment:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}  
@@ -15,7 +15,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
       - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
-      - gamer_network
+      - personality_network
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
       interval: 30s
@@ -27,7 +27,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: gamer_api
+    container_name: personality_api       
     ports:
       - "8000:8000"
     environment:
@@ -39,7 +39,7 @@ services:
       ml-models:
         condition: service_started
     networks:
-      - gamer_network
+      - personality_network
     volumes:
       - ./data:/app/data
     restart: unless-stopped
@@ -49,13 +49,13 @@ services:
     build:
       context: ./ml-models
       dockerfile: Dockerfile
-    container_name: gamer_ml
+    container_name: personality_ml        
     ports:
       - "8001:8001"
     environment:
       - MODEL_CACHE_DIR=/app/models
     networks:
-      - gamer_network
+      - personality_network
     volumes:
       - model_cache:/app/models
       - ./data:/data  # 🔥 이 줄 추가!
@@ -66,7 +66,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: gamer_frontend
+    container_name: personality_frontend  
     ports:
       - "3000:3000"
     volumes:                                    # ← 이 부분이 빠져있었음!
@@ -78,7 +78,7 @@ services:
     depends_on:
       - backend
     networks:
-      - gamer_network
+      - personality_network
     restart: unless-stopped
 
 volumes:
@@ -86,5 +86,5 @@ volumes:
   model_cache:
 
 networks:
-  gamer_network:
+  personality_network:
     driver: bridge
