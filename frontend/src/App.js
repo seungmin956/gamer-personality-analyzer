@@ -561,7 +561,7 @@ function App() {
       {/* 헤더 */}
       <div style={{ textAlign: 'center', marginBottom: '30px' }}>
         <h1 style={{ color: '#2C3E50', marginBottom: '10px' }}>
-          🎮 지원자 성향 분석기
+          🙎 지원자 성향 분석기
         </h1>
         <p style={{ color: '#7F8C8D' }}>
           AI 기반 면접 답변 분석으로 당신의 성향을 찾아보세요!
