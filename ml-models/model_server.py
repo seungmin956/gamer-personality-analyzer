@@ -4,6 +4,7 @@ from pydantic import BaseModel
 import json
 import pickle
 import os
+from fastapi.middleware.cors import CORSMiddleware
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
@@ -16,6 +17,14 @@ app = FastAPI(
     title="면접 성향 분석 ML 서버",
     description="면접 답변을 분석하여 지원자의 성향을 예측하는 API",
     version="1.0.0"
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # 로깅 설정
