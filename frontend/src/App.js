@@ -134,7 +134,7 @@ function App() {
           AI 기반 면접 답변 분석으로 당신의 성향을 찾아보세요!
         </p>
       </div>
-애찯
+
       {/* 서비스 상태
       <div style={{ 
         backgroundColor: '#F8F9FA', 
