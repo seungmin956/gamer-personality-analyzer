@@ -69,18 +69,14 @@ services:
     container_name: gamer_frontend
     ports:
       - "3000:3000"
+    volumes:                                    # ← 이 부분이 빠져있었음!
+      - ./frontend:/app                         # ← 로컬 frontend 폴더 → 컨테이너 /app
+      - /app/node_modules                       # ← node_modules 보호
     environment:
       - REACT_APP_API_URL=http://localhost:8000
+      - CHOKIDAR_USEPOLLING=true                # ← Windows 파일 변경 감지
     depends_on:
       - backend
     networks:
       - gamer_network
     restart: unless-stopped
-
-volumes:
-  postgres_data:
-  model_cache:
-
-networks:
-  gamer_network:
-    driver: bridge
