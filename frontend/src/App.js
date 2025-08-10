@@ -128,14 +128,14 @@ function App() {
       {/* 헤더 */}
       <div style={{ textAlign: 'center', marginBottom: '30px' }}>
         <h1 style={{ color: '#2C3E50', marginBottom: '10px' }}>
-          🎮 면접 성향 분석기
+          🎮 지원자 성향 분석기
         </h1>
         <p style={{ color: '#7F8C8D' }}>
           AI 기반 면접 답변 분석으로 당신의 성향을 찾아보세요!
         </p>
       </div>
-
-      {/* 서비스 상태 */}
+애찯
+      {/* 서비스 상태
       <div style={{ 
         backgroundColor: '#F8F9FA', 
         padding: '20px', 
@@ -172,7 +172,7 @@ function App() {
         >
           🔄 상태 새로고침
         </button>
-      </div>
+      </div> */}
 
       {/* 면접 분석 섹션 */}
       <div style={{ 
