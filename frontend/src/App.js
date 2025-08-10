@@ -105,17 +105,142 @@ function App() {
     }
   };
 
-  // 성향별 색상 반환 함수
-  const getPersonalityColor = (personality) => {
-    const colors = {
-      '적극형': '#FF6B6B',
-      '신중형': '#4ECDC4', 
-      '논리형': '#45B7D1',
-      '감성형': '#96CEB4',
-      '리더형': '#FFEAA7',
-      '팔로워형': '#DDA0DD'
+  // 성향별 색상 반환 함수 (최고 성향은 빨간색, 나머지는 회색)
+  const getPersonalityColor = (personality, isTop = false) => {
+    if (isTop) {
+      return '#E74C3C'; // 빨간색 (최고 성향)
+    }
+    return '#95A5A6'; // 회색 (나머지 성향)
+  };
+
+  // 레이더 차트용 SVG 컴포넌트
+  const RadarChart = ({ data, topPersonality }) => {
+    const size = 300;
+    const center = size / 2;
+    const radius = size * 0.35;
+    
+    // 6각형의 각 꼭짓점 좌표 계산
+    const getCoordinates = (angle, value) => {
+      const radian = (angle - 90) * Math.PI / 180; // -90도로 시작 (12시 방향)
+      const r = radius * value;
+      return {
+        x: center + r * Math.cos(radian),
+        y: center + r * Math.sin(radian)
+      };
     };
-    return colors[personality] || '#95A5A6';
+
+    // 6개 성향의 각도 (60도씩)
+    const angles = [0, 60, 120, 180, 240, 300];
+    
+    // 배경 육각형 (격자)
+    const backgroundLevels = [0.2, 0.4, 0.6, 0.8, 1.0];
+    
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', margin: '20px 0' }}>
+        <svg width={size} height={size} style={{ border: '1px solid #E9ECEF', borderRadius: '10px', backgroundColor: '#FAFAFA' }}>
+          {/* 배경 격자 */}
+          {backgroundLevels.map((level, i) => (
+            <polygon
+              key={i}
+              points={angles.map((angle, j) => {
+                const coord = getCoordinates(angle, level);
+                return `${coord.x},${coord.y}`;
+              }).join(' ')}
+              fill="none"
+              stroke="#E9ECEF"
+              strokeWidth="1"
+            />
+          ))}
+          
+          {/* 축선 */}
+          {angles.map((angle, i) => {
+            const coord = getCoordinates(angle, 1);
+            return (
+              <line
+                key={i}
+                x1={center}
+                y1={center}
+                x2={coord.x}
+                y2={coord.y}
+                stroke="#E9ECEF"
+                strokeWidth="1"
+              />
+            );
+          })}
+          
+          {/* 데이터 영역 */}
+          <polygon
+            points={data.map((item, i) => {
+              const coord = getCoordinates(angles[i], item.score);
+              return `${coord.x},${coord.y}`;
+            }).join(' ')}
+            fill="rgba(231, 76, 60, 0.2)"
+            stroke="#E74C3C"
+            strokeWidth="3"
+          />
+          
+          {/* 데이터 포인트 */}
+          {data.map((item, i) => {
+            const coord = getCoordinates(angles[i], item.score);
+            const isTop = item.personality === topPersonality;
+            return (
+              <circle
+                key={i}
+                cx={coord.x}
+                cy={coord.y}
+                r={isTop ? 8 : 5}
+                fill={isTop ? '#E74C3C' : '#95A5A6'}
+                stroke="white"
+                strokeWidth="2"
+              />
+            );
+          })}
+          
+          {/* 라벨 */}
+          {data.map((item, i) => {
+            const coord = getCoordinates(angles[i], 1.15);
+            const isTop = item.personality === topPersonality;
+            return (
+              <text
+                key={i}
+                x={coord.x}
+                y={coord.y}
+                textAnchor="middle"
+                dominantBaseline="middle"
+                fontSize="12"
+                fontWeight={isTop ? "bold" : "normal"}
+                fill={isTop ? '#E74C3C' : '#2C3E50'}
+              >
+                {item.personality}
+              </text>
+            );
+          })}
+          
+          {/* 중앙 텍스트 */}
+          <text
+            x={center}
+            y={center - 10}
+            textAnchor="middle"
+            dominantBaseline="middle"
+            fontSize="14"
+            fontWeight="bold"
+            fill="#2C3E50"
+          >
+            성향 분석
+          </text>
+          <text
+            x={center}
+            y={center + 10}
+            textAnchor="middle"
+            dominantBaseline="middle"
+            fontSize="12"
+            fill="#7F8C8D"
+          >
+            결과
+          </text>
+        </svg>
+      </div>
+    );
   };
 
   return (
@@ -134,45 +259,6 @@ function App() {
           AI 기반 면접 답변 분석으로 당신의 성향을 찾아보세요!
         </p>
       </div>
-
-      {/* 서비스 상태
-      <div style={{ 
-        backgroundColor: '#F8F9FA', 
-        padding: '20px', 
-        borderRadius: '10px',
-        marginBottom: '30px'
-      }}>
-        <h2 style={{ color: '#2C3E50', marginBottom: '15px' }}>🔧 서비스 상태</h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '10px' }}>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            {getStatusIcon(serviceStatus.frontend)} 프론트엔드: {getStatusText(serviceStatus.frontend)}
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            {getStatusIcon(serviceStatus.backend)} 백엔드: {getStatusText(serviceStatus.backend)}
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            {getStatusIcon(serviceStatus.database)} 데이터베이스: {getStatusText(serviceStatus.database)}
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            {getStatusIcon(serviceStatus.mlModel)} ML 모델: {getStatusText(serviceStatus.mlModel)}
-          </div>
-        </div>
-        
-        <button 
-          onClick={checkServices}
-          style={{
-            marginTop: '15px',
-            padding: '8px 16px',
-            backgroundColor: '#3498DB',
-            color: 'white',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer'
-          }}
-        >
-          🔄 상태 새로고침
-        </button>
-      </div> */}
 
       {/* 면접 분석 섹션 */}
       <div style={{ 
@@ -249,7 +335,7 @@ function App() {
             textAlign: 'center',
             marginBottom: '25px',
             padding: '20px',
-            backgroundColor: getPersonalityColor(analysisResult.predicted_personality),
+            backgroundColor: '#E74C3C',
             borderRadius: '10px',
             color: 'white'
           }}>
@@ -264,53 +350,70 @@ function App() {
             </div>
           </div>
 
-          {/* 전체 성향 점수 */}
+          {/* 레이더 차트 */}
           <div>
-            <h4 style={{ color: '#2C3E50', marginBottom: '15px' }}>📈 전체 성향 분석</h4>
+            <h4 style={{ color: '#2C3E50', marginBottom: '15px', textAlign: 'center' }}>📈 전체 성향 분석</h4>
+            <RadarChart 
+              data={Object.entries(analysisResult.all_scores).map(([personality, score]) => ({
+                personality,
+                score
+              }))}
+              topPersonality={analysisResult.predicted_personality}
+            />
+          </div>
+
+          {/* 상세 점수 표 */}
+          <div style={{ marginTop: '30px' }}>
+            <h4 style={{ color: '#2C3E50', marginBottom: '15px' }}>📋 상세 점수</h4>
             <div style={{ display: 'grid', gap: '8px' }}>
               {Object.entries(analysisResult.all_scores)
                 .sort(([,a], [,b]) => b - a)
-                .map(([personality, score]) => (
-                  <div key={personality} style={{ 
-                    display: 'flex', 
-                    alignItems: 'center',
-                    padding: '8px',
-                    backgroundColor: '#F8F9FA',
-                    borderRadius: '5px'
-                  }}>
-                    <div style={{ 
-                      width: '80px', 
-                      fontWeight: 'bold',
-                      color: getPersonalityColor(personality)
+                .map(([personality, score]) => {
+                  const isTop = personality === analysisResult.predicted_personality;
+                  return (
+                    <div key={personality} style={{ 
+                      display: 'flex', 
+                      alignItems: 'center',
+                      padding: '8px',
+                      backgroundColor: isTop ? '#FFE6E6' : '#F8F9FA',
+                      borderRadius: '5px',
+                      border: isTop ? '2px solid #E74C3C' : '1px solid #E9ECEF'
                     }}>
-                      {personality}
-                    </div>
-                    <div style={{ 
-                      flex: 1, 
-                      height: '20px', 
-                      backgroundColor: '#E9ECEF',
-                      borderRadius: '10px',
-                      margin: '0 10px',
-                      overflow: 'hidden'
-                    }}>
-                      <div style={{
-                        height: '100%',
-                        width: `${score * 100}%`,
-                        backgroundColor: getPersonalityColor(personality),
+                      <div style={{ 
+                        width: '80px', 
+                        fontWeight: isTop ? 'bold' : 'normal',
+                        color: isTop ? '#E74C3C' : '#2C3E50'
+                      }}>
+                        {personality}
+                      </div>
+                      <div style={{ 
+                        flex: 1, 
+                        height: '20px', 
+                        backgroundColor: '#E9ECEF',
                         borderRadius: '10px',
-                        transition: 'width 0.5s ease'
-                      }} />
+                        margin: '0 10px',
+                        overflow: 'hidden'
+                      }}>
+                        <div style={{
+                          height: '100%',
+                          width: `${score * 100}%`,
+                          backgroundColor: isTop ? '#E74C3C' : '#95A5A6',
+                          borderRadius: '10px',
+                          transition: 'width 0.5s ease'
+                        }} />
+                      </div>
+                      <div style={{ 
+                        width: '50px', 
+                        textAlign: 'right',
+                        fontSize: '14px',
+                        fontWeight: isTop ? 'bold' : 'normal',
+                        color: isTop ? '#E74C3C' : '#6C757D'
+                      }}>
+                        {(score * 100).toFixed(1)}%
+                      </div>
                     </div>
-                    <div style={{ 
-                      width: '50px', 
-                      textAlign: 'right',
-                      fontSize: '14px',
-                      color: '#6C757D'
-                    }}>
-                      {(score * 100).toFixed(1)}%
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
             </div>
           </div>
 
