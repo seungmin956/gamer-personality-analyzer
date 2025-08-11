@@ -411,9 +411,6 @@ LLM 기술에 주목하게 된 계기는 현장에서 마주한 보안 딜레마
             <div style={{ fontSize: '32px', fontWeight: 'bold', margin: '10px 0' }}>
               {analysisResult.predicted_personality}
             </div>
-            <div style={{ fontSize: '18px', opacity: 0.9 }}>
-              신뢰도: {(analysisResult.confidence * 100).toFixed(1)}%
-            </div>
           </div>
 
           {/* 레이더 차트 */}
