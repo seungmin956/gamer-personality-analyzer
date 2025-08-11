@@ -286,7 +286,7 @@ LLM 기술에 주목하게 된 계기는 현장에서 마주한 보안 딜레마
         border: '1px solid #E9ECEF',
         marginBottom: '30px'
       }}>
-        <h2 style={{ color: '#2C3E50', marginBottom: '15px' }}>💬 면접 답변 분석</h2>
+        <h2 style={{ color: '#2C3E50', marginBottom: '15px' }}>💬 자기소개 답변 분석</h2>
         
         {isDemoMode && (
           <div style={{
@@ -298,9 +298,7 @@ LLM 기술에 주목하게 된 계기는 현장에서 마주한 보안 딜레마
             fontSize: '14px',
             color: '#1976D2'
           }}>
-            💡 <strong>개발자 노트:</strong> 제가 개발한 AI 도구로 저 자신을 분석해봤습니다. 
-            현장에서 문제를 주도적으로 해결하고 팀을 이끌어가는 <strong>'리더십형'</strong> 성향이 가장 높게 나왔네요. 
-            실제로 이 프로젝트도 Docker 인프라 역량을 보여주기 위해 직접 기획하고 구현한 결과입니다.
+            💡 이 결과는 개발자가 본인 자기소개서로 테스트한 샘플입니다.
           </div>
         )}
         
@@ -478,8 +476,7 @@ LLM 기술에 주목하게 된 계기는 현장에서 마주한 보안 딜레마
             fontSize: '14px',
             color: '#6C757D'
           }}>
-            <div>분석 시간: {analysisResult.analysis_time?.toFixed(3) || '0.156'}초</div>
-            <div>분석 일시: {new Date(analysisResult.timestamp || Date.now()).toLocaleString()}</div>
+
           </div>
         </div>
       )}
