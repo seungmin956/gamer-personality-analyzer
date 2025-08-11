@@ -9,9 +9,23 @@
 <p>Docker + FastAPI + HuggingFace 기반 마이크로서비스 아키텍처로 구현한</p>
 <p>지원자 자기소개서를 통한 성향 분석 AI 시스템입니다.</p>
 
--- [로컬 실행 (Docker Compose)](#-실행-방법)  
--- [아키텍처 상세](#-기술-아키텍처)
+## 🔄 실행 방법
 
+### 원클릭 실행
+
+```bash
+# 1. 프로젝트 클론
+git clone https://github.com/yourusername/personality-analyzer.git
+cd personality-analyzer
+
+# 2. Docker Compose 실행 (3개 컨테이너 자동 구동)
+docker-compose up -d
+
+# 4. 서비스 접속 확인
+# Frontend: http://localhost:3000
+# Backend API: http://localhost:8000/docs
+# ML Server: http://localhost:8001/health
+```
 
 ---
 
@@ -137,15 +151,6 @@ graph TB
 </thead>
 <tbody>
 <tr>
-<td>
-• <strong>Docker volumes 설정 수정</strong><br>
-• `./data:/data` 마운트 추가<br>
-• 절대 경로 사용으로 통일<br>
-• 읽기 전용 권한으로 보안 강화
-</td>
-<td align="center">Docker<br>Volumes</td>
-</tr>
-<tr>
 <td align="center"><strong>CORS 설정</strong></td>
 <td>
 • 프론트엔드에서 백엔드 API 호출 시 CORS 에러<br>
@@ -159,15 +164,6 @@ graph TB
 • preflight 요청 처리
 </td>
 <td align="center">FastAPI<br>CORS</td>
-</tr>
-<tr>
-<td>
-• <strong>직무 중심 성향으로 재정의</strong><br>
-• 리더십형, 전문가형, 소통형, 실행형, 창의형, 안정형<br>
-• 자동 변환 스크립트 개발<br>
-• HR 실무진 피드백 반영
-</td>
-<td align="center">Domain<br>Knowledge</td>
 </tr>
 <tr>
 <td align="center"><strong>모델 서빙</strong></td>
@@ -217,24 +213,6 @@ graph TB
 </tbody>
 </table>
 
----
-## 🔄 실행 방법
-
-### 원클릭 실행
-
-```bash
-# 1. 프로젝트 클론
-git clone https://github.com/yourusername/personality-analyzer.git
-cd personality-analyzer
-
-# 2. Docker Compose 실행 (3개 컨테이너 자동 구동)
-docker-compose up -d
-
-# 4. 서비스 접속 확인
-# Frontend: http://localhost:3000
-# Backend API: http://localhost:8000/docs
-# ML Server: http://localhost:8001/health
-```
 ---
 
 ## 🔮 향후 확장 계획
