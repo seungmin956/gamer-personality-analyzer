@@ -121,126 +121,6 @@ graph TB
 </tbody>
 </table>
 
----
-
-## 🚀 FastAPI 기반 RESTful API 설계
-
-### API 엔드포인트 구조
-
-**ML Server (Port 8001)**
-```python
-# 성향 분석 API
-POST /analyze
-{
-    "text": "면접 답변 텍스트",
-    "user_id": "사용자 ID"
-}
-
-# 응답 스키마 (Pydantic)
-{
-    "predicted_personality": "리더십형",
-    "confidence": 0.194,
-    "all_scores": {
-        "리더십형": 0.194,
-        "전문가형": 0.188,
-        "소통형": 0.182,
-        "실행형": 0.159,
-        "안정형": 0.158,
-        "창의형": 0.120
-    },
-    "analysis_time": 0.156,
-    "timestamp": "2025-01-15T10:30:00Z"
-}
-```
-
-**Backend Server (Port 8000)**
-```python
-# 헬스체크 API
-GET /health
-{
-    "status": "healthy",
-    "timestamp": "2025-01-15T10:30:00Z",
-    "database": "connected"
-}
-
-# 사용자 관리 API (확장 예정)
-POST /users
-GET /users/{user_id}/history
-```
-
-### RESTful 설계 원칙 적용
-
-- **명확한 자원 식별**: `/analyze`, `/health`, `/users`
-- **HTTP 메서드 활용**: GET (조회), POST (생성), PUT (수정), DELETE (삭제)
-- **상태 코드 표준화**: 200 (성공), 400 (클라이언트 오류), 500 (서버 오류)
-- **JSON 기반 통신**: 일관된 데이터 교환 형식
-- **Pydantic 스키마**: 요청/응답 데이터 검증 및 문서 자동화
-
----
-
-## 🐳 Docker 인프라 설계
-
-### docker-compose.yml 구조
-
-```yaml
-version: '3.8'
-
-services:
-  frontend:
-    build: ./frontend
-    ports:
-      - "3000:3000"
-    depends_on:
-      - backend
-      - ml-server
-    environment:
-      - REACT_APP_API_URL=http://localhost:8000
-      - REACT_APP_ML_URL=http://localhost:8001
-
-  backend:
-    build: ./backend
-    ports:
-      - "8000:8000"
-    depends_on:
-      - postgres
-    environment:
-      - DATABASE_URL=postgresql://user:password@postgres:5432/personality_db
-    volumes:
-      - ./logs:/app/logs
-
-  ml-server:
-    build: ./ml-models
-    ports:
-      - "8001:8001"
-    volumes:
-      - ./data:/data:ro  # 읽기 전용 데이터 마운트
-      - ./models:/models # 모델 저장소
-    environment:
-      - MODEL_PATH=/models/personality_model.pkl
-      - DATA_PATH=/data/profiles.json
-
-  postgres:
-    image: postgres:13
-    environment:
-      - POSTGRES_DB=personality_db
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=password
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
-
-volumes:
-  postgres_data:
-```
-
-### 컨테이너 통신 설계
-
-1. **서비스 디스커버리**: Docker 내부 네트워크를 통한 서비스명 기반 통신
-2. **포트 매핑**: 각 서비스별 전용 포트 할당으로 충돌 방지
-3. **볼륨 마운트**: 데이터 영속성 및 컨테이너 간 파일 공유
-4. **환경 변수**: 설정 분리를 통한 유연한 배포 환경 구성
-5. **의존성 관리**: `depends_on`을 통한 서비스 시작 순서 제어
 
 ---
 
@@ -257,12 +137,6 @@ volumes:
 </thead>
 <tbody>
 <tr>
-<td align="center"><strong>데이터 경로</strong></td>
-<td>
-• ML 서버에서 `/data/profiles.json` 파일 찾지 못함<br>
-• 컨테이너 간 파일 시스템 분리<br>
-• 상대 경로 문제
-</td>
 <td>
 • <strong>Docker volumes 설정 수정</strong><br>
 • `./data:/data` 마운트 추가<br>
@@ -287,12 +161,6 @@ volumes:
 <td align="center">FastAPI<br>CORS</td>
 </tr>
 <tr>
-<td align="center"><strong>성향 분류 체계</strong></td>
-<td>
-• 기존 6가지 성향(적극형, 신중형 등) 모호<br>
-• 비슷한 점수로 차별화 어려움<br>
-• 비즈니스 가치 부족
-</td>
 <td>
 • <strong>직무 중심 성향으로 재정의</strong><br>
 • 리더십형, 전문가형, 소통형, 실행형, 창의형, 안정형<br>
@@ -350,35 +218,7 @@ volumes:
 </table>
 
 ---
-
-## 📊 성과 및 성능 지표
-
-### 기술적 성과
-- ✅ **100% 모델 정확도** (TF-IDF + Logistic Regression)
-- ✅ **0.15초 평균 응답 시간** (실시간 분석)
-- ✅ **4개 마이크로서비스 안정적 연동**
-- ✅ **Docker Compose 원클릭 배포**
-
-### 아키텍처 완성도
-- ✅ **컨테이너화된 ML 파이프라인**
-- ✅ **RESTful API 설계 및 구현**
-- ✅ **프론트엔드-백엔드-ML 3계층 분리**
-- ✅ **실시간 데이터 시각화 (레이더 차트)**
-
-### 확장성 증명
-- ✅ **모델 교체 용이성** (scikit-learn → HuggingFace 모델)
-- ✅ **수평 확장 가능한 구조** (로드밸런서 추가 가능)
-- ✅ **데이터베이스 연동 준비** (PostgreSQL)
-- ✅ **CI/CD 파이프라인 적용 가능**
-
----
-
 ## 🔄 실행 방법
-
-### 필수 요구사항
-- Docker Desktop 4.0+
-- Docker Compose 2.0+
-- 8GB+ RAM 권장
 
 ### 원클릭 실행
 
@@ -387,27 +227,14 @@ volumes:
 git clone https://github.com/yourusername/personality-analyzer.git
 cd personality-analyzer
 
-# 2. 환경 설정
-cp .env.example .env
-
-# 3. Docker Compose 실행 (4개 컨테이너 자동 구동)
+# 2. Docker Compose 실행 (3개 컨테이너 자동 구동)
 docker-compose up -d
 
 # 4. 서비스 접속 확인
 # Frontend: http://localhost:3000
 # Backend API: http://localhost:8000/docs
 # ML Server: http://localhost:8001/health
-# Database: localhost:5432
 ```
-
-### 개발 모드 실행
-
-```bash
-# 개별 서비스 개발 시
-docker-compose up frontend backend  # ML 서버 제외
-docker-compose logs -f ml-server     # ML 서버 로그 실시간 확인
-```
-
 ---
 
 ## 🔮 향후 확장 계획
@@ -427,33 +254,6 @@ docker-compose logs -f ml-server     # ML 서버 로그 실시간 확인
 - **CI/CD 파이프라인**: GitHub Actions 기반 자동 배포
 - **모니터링 체계**: Prometheus + Grafana 성능 모니터링
 
----
-
-## 💼 포트폴리오 어필 포인트
-
-### 🏗️ 인프라 엔지니어링 역량
-- **Docker 멀티컨테이너 오케스트레이션**
-- **마이크로서비스 아키텍처 설계**
-- **서비스 디스커버리 및 통신 설계**
-
-### 🤖 AI/ML 파이프라인 구축
-- **HuggingFace 모델 비교 실험**
-- **scikit-learn 기반 모델 서빙**
-- **실시간 ML API 개발**
-
-### 🔧 풀스택 개발 능력
-- **FastAPI 기반 RESTful API**
-- **React 기반 실시간 시각화**
-- **PostgreSQL 데이터베이스 연동**
-
-### 📈 비즈니스 가치 창출
-- **HR 솔루션 도메인 이해**
-- **실무 문제 해결 접근법**
-- **확장 가능한 제품 설계**
 
 ---
 
-<div align="center">
-<p><strong>실제 프로덕션 환경을 고려한 AI 시스템 구축 경험</strong></p>
-<p>단순한 ML 모델 구현을 넘어, 확장 가능하고 배포 가능한 완전한 AI 파이프라인을 구축했습니다.</p>
-</div>
