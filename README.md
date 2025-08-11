@@ -1,7 +1,3 @@
-<div align="center">
-<img src="personality_analyzer_demo.png" alt="Personality Analyzer Demo" style="border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);" width="85%">
-<br><br>
-</div>
 
 #  지원자 성향 분석 시스템 
 
@@ -214,23 +210,6 @@ graph TB
 </table>
 
 ---
-
-## 🔮 향후 확장 계획
-
-### Phase 2: 모델 고도화
-- **HuggingFace Transformers 적용**: BERT, RoBERTa 기반 정확도 향상
-- **실제 데이터 학습**: 기업 협력을 통한 실제 면접 데이터 확보
-- **다국어 지원**: 영어, 일본어 면접 분석 확장
-
-### Phase 3: 서비스 확장
-- **음성 분석 기능**: Whisper + 텍스트 분석 통합
-- **기업별 맞춤 분석**: 회사 문화에 따른 성향 가중치 조정
-- **실시간 대시보드**: 관리자용 통계 및 분석 도구
-
-### Phase 4: 상용화 준비
-- **Kubernetes 배포**: 대규모 트래픽 처리
-- **CI/CD 파이프라인**: GitHub Actions 기반 자동 배포
-- **모니터링 체계**: Prometheus + Grafana 성능 모니터링
 
 
 ---
