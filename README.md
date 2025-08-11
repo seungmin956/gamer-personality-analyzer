@@ -1,5 +1,5 @@
 <div align="center">
-<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=200&section=header&text=Interview%20Personality%20Analyzer&fontSize=35&animation=fadeIn&fontAlignY=35&desc=AI-powered%20Docker%20Infrastructure%20for%20HR%20Solutions&descAlignY=51&descAlign=62" />
+<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=200&section=header&text=Personality%20Analyzer&fontSize=35&animation=fadeIn&fontAlignY=35&desc=AI-powered%20Docker%20Infrastructure%20for%20HR%20Solutions&descAlignY=51&descAlign=62" />
 </div>
 
 #  지원자 성향 분석 시스템 
