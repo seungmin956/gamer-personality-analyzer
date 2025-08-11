@@ -3,26 +3,15 @@
 <br><br>
 </div>
 
-# 🎯 면접 성향 분석 시스템 (Interview Personality Analyzer)
+#  지원자 성향 분석 시스템 
 
 <p><strong>개인 프로젝트</strong> | <strong>🏗️ Docker 멀티컨테이너 기반 AI 파이프라인</strong><br></p>
 <p>Docker + FastAPI + HuggingFace 기반 마이크로서비스 아키텍처로 구현한</p>
-<p>실시간 면접 답변 성향 분석 AI 시스템입니다.</p>
+<p>지원자 자기소개서를 통한 성향 분석 AI 시스템입니다.</p>
 
 -- [로컬 실행 (Docker Compose)](#-실행-방법)  
 -- [아키텍처 상세](#-기술-아키텍처)
 
----
-
-## 🎯 프로젝트 개발 동기
-
-**기존 Streamlit 프로젝트들과의 차별화를 위한 인프라 중심 접근**
-
-기업 채용 공고에서 요구하는 **Docker, HuggingFace, FastAPI** 경험을 실무 수준으로 습득하고 증명하기 위해 시작한 프로젝트입니다. 
-
-- **문제 인식**: 기존 Streamlit 기반 프로젝트들로는 실제 프로덕션 환경의 인프라 경험을 어필하기 어려움
-- **해결 방향**: Docker 기반 멀티컨테이너 마이크로서비스 아키텍처로 완전한 AI 파이프라인 구축
-- **핵심 가치**: 단순한 ML 모델 구현이 아닌, **확장 가능하고 배포 가능한 AI 시스템** 개발
 
 ---
 
@@ -35,36 +24,12 @@ graph TB
     subgraph "Docker Compose 환경"
         A[React Frontend<br/>:3000] --> B[FastAPI Backend<br/>:8000]
         A --> C[ML Server<br/>:8001]
-        B --> D[PostgreSQL<br/>:5432]
         C --> E[Data Volume<br/>/data]
     end
     
     F[사용자] --> A
     C --> G[HuggingFace Models<br/>TF-IDF + LogisticRegression]
 ```
-
-### 컨테이너별 역할 분담
-
-<table>
-<tr>
-<td width="25%" align="center">
-<h4>🎨 Frontend</h4>
-<p>React.js<br/>레이더 차트 시각화<br/>실시간 분석 요청</p>
-</td>
-<td width="25%" align="center">
-<h4>🔧 Backend</h4>
-<p>FastAPI<br/>RESTful API<br/>헬스체크 엔드포인트</p>
-</td>
-<td width="25%" align="center">
-<h4>🤖 ML Server</h4>
-<p>scikit-learn<br/>TF-IDF + Logistic Regression<br/>6가지 성향 분류</p>
-</td>
-<td width="25%" align="center">
-<h4>💾 Database</h4>
-<p>PostgreSQL<br/>분석 결과 저장<br/>사용자 데이터 관리</p>
-</td>
-</tr>
-</table>
 
 ---
 
@@ -94,7 +59,6 @@ graph TB
 <td>
 • 정확도: 87%<br>
 • 추론 시간: 2.3초<br>
-• 메모리: 2GB+
 </td>
 <td>
 • 소규모 데이터셋(52개)에 오버엔지니어링<br>
@@ -112,7 +76,6 @@ graph TB
 <td>
 • 정확도: 89%<br>
 • 추론 시간: 2.8초<br>
-• 메모리: 2.5GB+
 </td>
 <td>
 • 소량 데이터에서 과적합 발생<br>
@@ -130,7 +93,6 @@ graph TB
 <td>
 • 정확도: 85%<br>
 • 추론 시간: 1.2초<br>
-• 메모리: 1GB
 </td>
 <td>
 • 여전히 소규모 데이터에 과적합<br>
@@ -148,7 +110,6 @@ graph TB
 <td>
 • 정확도: 100%<br>
 • 추론 시간: 0.15초<br>
-• 메모리: <50MB
 </td>
 <td>
 • ✅ <strong>소규모 데이터에 최적화</strong><br>
@@ -159,14 +120,6 @@ graph TB
 </tr>
 </tbody>
 </table>
-
-### 모델 선택 기준
-
-1. **데이터 규모 적합성**: 52개 샘플 데이터에 적합한 모델 복잡도
-2. **실시간 성능**: 0.2초 이내 응답 목표
-3. **배포 안정성**: Docker 환경에서 안정적 동작
-4. **확장성**: 향후 데이터 증가 시 쉬운 모델 교체 가능
-5. **해석가능성**: 비즈니스 관점에서 이해 가능한 결과
 
 ---
 
