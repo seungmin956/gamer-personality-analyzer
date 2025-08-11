@@ -10,21 +10,7 @@ LLM 기술에 주목하게 된 계기는 현장에서 마주한 보안 딜레마
 
 '기술은 결국 서비스'라는 신념으로, 호텔리어 경력을 통해 쌓은 고객 needs 파악 능력을 바탕으로 진정한 수요가 있는 AI 솔루션을 개발하고 싶습니다. 입사 후에는 현장에서 체득한 사용자 경험을 바탕으로 기업의 실제 보안 요구사항을 충족하는 사내 전용 LLM 솔루션 개발에 기여하겠습니다. 개인 프로젝트의 한계를 넘어 실제 기업 데이터를 활용하여, 개발자 관점에서는 완벽해 보이는 기능도 실무진에게는 불편할 수 있다는 현장 경험을 살려 진정으로 사용자 친화적이면서도 보안성을 확보한 솔루션을 만들어가겠습니다.`;
 
-  // 미리 설정된 분석 결과 (실제 결과: 리더십형)
-  const defaultAnalysisResult = {
-    predicted_personality: "리더십형",
-    confidence: 0.194,
-    all_scores: {
-      "리더십형": 0.194,
-      "전문가형": 0.188,
-      "소통형": 0.182,
-      "실행형": 0.159,
-      "안정형": 0.158,
-      "창의형": 0.120
-    },
-    analysis_time: 0.156,
-    timestamp: new Date().toISOString()
-  };
+  // 하드코딩 제거 - 실제 ML 모델로 분석
 
   // 상태 관리
   const [serviceStatus, setServiceStatus] = useState({
@@ -35,18 +21,48 @@ LLM 기술에 주목하게 된 계기는 현장에서 마주한 보안 딜레마
   });
   
   const [interviewText, setInterviewText] = useState(defaultCoverLetter);
-  const [analysisResult, setAnalysisResult] = useState(defaultAnalysisResult);
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [analysisResult, setAnalysisResult] = useState(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(true); // 처음 로딩 시 분석 중 상태
   const [error, setError] = useState(null);
   const [isDemoMode, setIsDemoMode] = useState(true);
 
-  // 컴포넌트 마운트 시 초기 설정
+  // 컴포넌트 마운트 시 자동으로 자기소개서 분석 실행
   useEffect(() => {
-    // 3초 후에 자동 분석 시뮬레이션
-    setTimeout(() => {
-      setIsAnalyzing(false);
-    }, 100);
+    performInitialAnalysis();
   }, []);
+
+  // 초기 분석 함수
+  const performInitialAnalysis = async () => {
+    setIsAnalyzing(true);
+    setError(null);
+
+    try {
+      // 실제 ML 서버에 자기소개서 분석 요청
+      const response = await fetch('http://localhost:8001/analyze', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          text: defaultCoverLetter,
+          user_id: 'demo_user'
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('분석 요청 실패');
+      }
+
+      const result = await response.json();
+      setAnalysisResult(result);
+      
+    } catch (error) {
+      console.error('초기 분석 실패:', error);
+      setError('서버 연결에 실패했습니다. ML 서버가 실행 중인지 확인해주세요.');
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
 
   // 서비스 상태 체크 함수 (실제 서버 연동용)
   const checkServices = async () => {
@@ -286,7 +302,7 @@ LLM 기술에 주목하게 된 계기는 현장에서 마주한 보안 딜레마
         border: '1px solid #E9ECEF',
         marginBottom: '30px'
       }}>
-        <h2 style={{ color: '#2C3E50', marginBottom: '15px' }}>💬 자기소개 답변 분석</h2>
+        <h2 style={{ color: '#2C3E50', marginBottom: '15px' }}>💬 자기소개서 답변 분석</h2>
         
         {isDemoMode && (
           <div style={{
@@ -476,7 +492,6 @@ LLM 기술에 주목하게 된 계기는 현장에서 마주한 보안 딜레마
             fontSize: '14px',
             color: '#6C757D'
           }}>
-
           </div>
         </div>
       )}
