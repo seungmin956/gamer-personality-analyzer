@@ -1,3 +1,10 @@
+<div align="center">
+<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=200&section=header&text=Interview%20Personality%20Analyzer&fontSize=35&animation=fadeIn&fontAlignY=35&desc=AI-powered%20Docker%20Infrastructure%20for%20HR%20Solutions&descAlignY=51&descAlign=62" />
+</div>
+<div align="center">
+<img src="personality_analyzer_demo.png" alt="Personality Analyzer Demo" style="border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);" width="85%">
+<br><br>
+</div>
 
 #  지원자 성향 분석 시스템 
 
