@@ -7,8 +7,6 @@
 
 ## 🔄 실행 방법
 
-### 원클릭 실행
-
 ```bash
 # 1. 프로젝트 클론
 git clone https://github.com/yourusername/personality-analyzer.git
