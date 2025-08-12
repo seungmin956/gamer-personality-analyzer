@@ -12,7 +12,7 @@
 
 ```bash
 # 1. 프로젝트 클론
-git clone https://github.com/yourusername/personality-analyzer.git
+git clone https://github.com/seungmin956/personality-analyzer.git
 cd personality-analyzer
 
 # 2. Docker Compose 실행 (3개 컨테이너 자동 구동)
